@@ -20,7 +20,7 @@ gulp.task('sass', () => {
        // .pipe(browserSync.stream())
 });
 gulp.task('html', () => {
-    return gulp.src('views/*.ejs')
+    return gulp.src('views/**/*.ejs')
         .pipe(browserSync.stream())
 });
 gulp.task('js', () => {
