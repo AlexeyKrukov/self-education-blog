@@ -1,0 +1,1 @@
+$(function(){var i=!0;$(".switch-button").on("click",function(o){o.preventDefault(),i?(i=!1,$(".registration").show("slow"),$(".login").hide()):(i=!0,$(".registration").hide(),$(".login").show("slow"))})});
