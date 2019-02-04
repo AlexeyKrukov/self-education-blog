@@ -7,5 +7,6 @@ dotenv.config({ path: root('.env')});
 module.exports = {
     PORT: process.env.PORT || 3001,
     MONGO_URL: 'mongodb://localhost/blog',
+    SESSION_SECRET: process.env.SESSION_SECRET,
     IS_PRODUCTION: process.env.NODE_ENV === 'production'
 };

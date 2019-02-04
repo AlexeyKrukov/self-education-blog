@@ -4,6 +4,8 @@ $(function () {
         e.preventDefault();
 
         $('input').val('');
+        $('p.error').remove();
+        $('input').removeClass('error');
 
         if(flag) {
             flag = false;
@@ -23,6 +25,8 @@ $(function () {
     });
     $('.register-button').on('click', function (e) {
         e.preventDefault();
+        $('p.error').remove();
+        $('input').removeClass('error');
 
         var data = {
             login: $('#register-login').val(),
@@ -46,5 +50,34 @@ $(function () {
                 $('.registration h2').after('<p class="success">Отлично!</p>');
             }
         })
+    });
+    $('.login-button').on('click', function (e) {
+        e.preventDefault();
+        $('p.error').remove();
+        $('input').removeClass('error');
+
+        var data = {
+            login: $('#login-login').val(),
+            password: $('#login-password').val()
+        };
+        $.ajax({
+            type: 'POST',
+            data: JSON.stringify(data),
+            contentType: 'application/json',
+            url: 'api/auth/login'
+        }).done(function(data) {
+            if (!data.ok) {
+                $('.login h2').after('<p class="error">'.concat(data.error).concat('</p>'))
+            }
+            if (data.fields) {
+                data.fields.forEach(function (item) {
+                    $('input[name='.concat(item).concat(']')).addClass('error');
+                })
+            } else {
+               // $('.login  h2').after('<p class="success">Отлично!</p>');
+                location.reload();
+            }
+        })
+
     });
 });

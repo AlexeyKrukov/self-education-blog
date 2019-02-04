@@ -54,11 +54,70 @@ router.post('/register', (req, res) => {
                 password: hash
             }).then(user => {
                 console.log(user);
+                req.session.userId = user.id;
+                req.session.userLogin = user.login;
                 res.json({
                     ok: true
                 })
             })
         });
+    }
+});
+router.post('/login', (req, res) => {
+    const login = req.body.login;
+    const password = req.body.password;
+    if (!login || !password) {
+        const fields = [];
+        if (!login) fields.push('login');
+        if(!password) fields.push('password');
+        res.json({
+            ok: false,
+            error: 'Все поля должны быть заполнены',
+            fields
+        });
+    } else {
+        models.User.findOne({
+            login
+        }).then(user => {
+            if (!user) {
+                res.json({
+                    ok: false,
+                    error: 'Неверное имя пользователя или пароль',
+                    fields: ['login', 'password']
+                })
+            } else {
+                bcrypt.compare(password, user.password, function (err, result) {
+                    if(!result) {
+                        res.json({
+                            ok: false,
+                            error: 'Неверное имя пользователя или пароль',
+                            fields: ['login', 'password']
+                        })
+                    } else {
+                        req.session.userId = user.id;
+                        req.session.userLogin = user.login;
+                        res.json({
+                            ok: true
+                        })
+                    }
+                })
+            }
+        }).catch(e => {
+            console.log('error: '.concat(e));
+            res.json({
+                ok: false,
+                error: 'Ошибка, попробуйте позже'
+            })
+        })
+    }
+});
+router.get('/logout', (req, res) => {
+    if (req.session) {
+        req.session.destroy(() => {
+            res.redirect('/');
+        })
+    } else {
+        res.redirect('/');
     }
 });
 
