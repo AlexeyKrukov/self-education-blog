@@ -3,6 +3,8 @@ $(function () {
     $('.switch-button').on('click', function (e) {
         e.preventDefault();
 
+        $('input').val('');
+
         if(flag) {
             flag = false;
             $('.registration').show('slow');

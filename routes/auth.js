@@ -9,10 +9,20 @@ router.post('/register', (req, res) => {
     const passwordConfirm = req.body.passwordConfirm;
 
     if (!login || !password || !passwordConfirm) {
+        const fields = [];
+        if (!login) fields.push('login');
+        if(!password) fields.push('password');
+        if(!passwordConfirm) fields.push('passwordConfirm');
         res.json({
             ok: false,
             error: 'Все поля должны быть заполнены',
-            fields: ['login', 'password', 'passwordConfirm']
+            fields
+        });
+    } else if (!/^[a-zA-Z0-9]+$/.test(login)) {
+        res.json({
+            ok: false,
+            error: 'Только латинские символы и цифры',
+            fields: ['login']
         });
     } else if (login.length < 3 || login.length > 16) {
         res.json({
