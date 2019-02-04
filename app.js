@@ -5,6 +5,7 @@ const path =  require('path');
 const staticAsset = require('static-asset');
 const mongoose =  require('mongoose');
 const config = require('./config');
+const routes = require('./routes');
 
 mongoose.Promise = global.Promise;
 mongoose.set('debug', config.IS_PRODUCTION);
@@ -21,6 +22,7 @@ mongoose.connect(config.MONGO_URL, { useMongClient: true });
 
 app.set('view engine', 'ejs');
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 app.use(staticAsset(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/javascripts', express.static(path.join(__dirname, 'node_modules', 'jquery', 'dist')));
@@ -28,6 +30,11 @@ app.use('/javascripts', express.static(path.join(__dirname, 'node_modules', 'jqu
 app.get('/', (req, res) => {
    res.render('index');
 });
+app.post('/', (req, res) => {
+   // res.render('index');
+    res.send();
+});
+app.use('/api/auth', routes.auth);
 
 app.use((req, res, next) => {
    const err = new Error('Not found');
